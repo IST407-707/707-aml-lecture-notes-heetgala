@@ -50,14 +50,14 @@ code:
 Q1 = nypd_data['Time_Difference_Minutes'].quantile(0.25)
 Q3 = nypd_data['Time_Difference_Minutes'].quantile(0.75)
 
-*Calculate the interquartile range (IQR)
+-Calculate the interquartile range (IQR)
 IQR = Q3 - Q1
 
-* Define the lower and upper bounds to identify outliers
+- Define the lower and upper bounds to identify outliers
 lower_bound = Q1 - 1.5 * IQR
 upper_bound = Q3 + 1.5 * IQR
 
-* Filter the DataFrame to remove outliers
+- Filter the DataFrame to remove outliers
 nypd_data_no_outliers = nypd_data[(nypd_data['Time_Difference_Minutes'] >= lower_bound) & (nypd_data['Time_Difference_Minutes'] <= upper_bound)]
 
 The columns 'CAD_EVNT_ID', 'GEO_CD_X', and 'GEO_CD_Y' were dropped from the 'merged_data' DataFrame as they were deemed unnecessary for the analysis.
@@ -65,13 +65,13 @@ The columns 'CAD_EVNT_ID', 'GEO_CD_X', and 'GEO_CD_Y' were dropped from the 'mer
 The 'BORO_NM' column in the 'merged_data' DataFrame was encoded using LabelEncoder, which converts categorical labels into numerical representations. The mapping of original values to encoded values in the 'BORO_NM' column was printed to understand how the encoding was performed.
 
 from sklearn.preprocessing import LabelEncoder
-* Initialize LabelEncoder
+- Initialize LabelEncoder
 label_encoder = LabelEncoder()
 
-* Fit and transform the 'BORO_NM' column
+- Fit and transform the 'BORO_NM' column
 merged_data['BORO_NM_encoded'] = label_encoder.fit_transform(merged_data['BORO_NM'])
 
-* Print the mapping of original values to encoded values
+- Print the mapping of original values to encoded values
 print("Mapping of original values to encoded values:")
 for original, encoded in zip(label_encoder.classes_, label_encoder.transform(label_encoder.classes_)):
     print(f"{original}: {encoded}")
