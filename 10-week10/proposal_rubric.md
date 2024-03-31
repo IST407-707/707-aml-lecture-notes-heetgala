@@ -12,6 +12,7 @@ Kunal Ahirrao - kuunnnaaaalllll
 ## Overview
 
 By addressing Heilmeier's catechism, we can provide insight into the following:
+
 Question 1 - What are you trying to do?
 The project aims to improve emergency response systems and enhance public safety in New York City by analyzing NYPD call data. By
 examining historical records, we aim to uncover insights that can help emergency services respond more effectively to critical situations.
@@ -45,17 +46,18 @@ The steps included in preprocessing of data are as follows:
 The time difference in minutes between 'ARRIVD_TS' and 'DISP_TS' columns was calculated and stored in the 'Time_Difference_Minutes' column in the 'nypd_data' DataFrame. Rows where the time difference was less than 0 were filtered out to ensure valid time durations for analysis. And the outliers where filtered out based on the confidence interval.
 
 code: 
+
 Q1 = nypd_data['Time_Difference_Minutes'].quantile(0.25)
 Q3 = nypd_data['Time_Difference_Minutes'].quantile(0.75)
 
-# Calculate the interquartile range (IQR)
+*Calculate the interquartile range (IQR)
 IQR = Q3 - Q1
 
-# Define the lower and upper bounds to identify outliers
+* Define the lower and upper bounds to identify outliers
 lower_bound = Q1 - 1.5 * IQR
 upper_bound = Q3 + 1.5 * IQR
 
-# Filter the DataFrame to remove outliers
+* Filter the DataFrame to remove outliers
 nypd_data_no_outliers = nypd_data[(nypd_data['Time_Difference_Minutes'] >= lower_bound) & (nypd_data['Time_Difference_Minutes'] <= upper_bound)]
 
 The columns 'CAD_EVNT_ID', 'GEO_CD_X', and 'GEO_CD_Y' were dropped from the 'merged_data' DataFrame as they were deemed unnecessary for the analysis.
@@ -63,13 +65,13 @@ The columns 'CAD_EVNT_ID', 'GEO_CD_X', and 'GEO_CD_Y' were dropped from the 'mer
 The 'BORO_NM' column in the 'merged_data' DataFrame was encoded using LabelEncoder, which converts categorical labels into numerical representations. The mapping of original values to encoded values in the 'BORO_NM' column was printed to understand how the encoding was performed.
 
 from sklearn.preprocessing import LabelEncoder
-# Initialize LabelEncoder
+* Initialize LabelEncoder
 label_encoder = LabelEncoder()
 
-# Fit and transform the 'BORO_NM' column
+* Fit and transform the 'BORO_NM' column
 merged_data['BORO_NM_encoded'] = label_encoder.fit_transform(merged_data['BORO_NM'])
 
-# Print the mapping of original values to encoded values
+* Print the mapping of original values to encoded values
 print("Mapping of original values to encoded values:")
 for original, encoded in zip(label_encoder.classes_, label_encoder.transform(label_encoder.classes_)):
     print(f"{original}: {encoded}")
@@ -86,5 +88,6 @@ We are yet to find the baseline for our modelling technique and how to go about 
 ## Next steps
 
 Procceed with the modelling - 04/06/2024 - 04/13/2024
+
 Test the model - 04/14/2024 - 04/21/2024
 
