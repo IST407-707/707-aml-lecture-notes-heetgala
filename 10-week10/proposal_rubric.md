@@ -25,9 +25,7 @@ meaningful insights. Through advanced data analysis and machine learning techniq
 model can help identify crime-prone areas and optimize resource allocation. Overall, our approach has the potential to significantly
 enhance public safety in the city.
 Question 3 - Who cares? If you are successful, what difference will it make?
-If our project succeeds, it could greatly improve emergency response systems and enhance public safety in New York City. This would
-directly benefit law enforcement agencies, key stakeholders, by allowing them to use resources more efficiently and respond more
-effectively to emergencies, possibly leading to lower crime rates. Additionally, government agencies and city officials would be interested in the results to improve how they make policies and allocate resources. Ultimately, the general public, who are indirect stakeholders, in New York City would benefit from safer communities and better emergency services.
+If our project succeeds, it could greatly improve emergency response systems and enhance public safety in New York City. This would directly benefit law enforcement agencies, key stakeholders, by allowing them to use resources more efficiently and respond more effectively to emergencies, possibly leading to lower crime rates. Additionally, government agencies and city officials would be interested in the results to improve how they make policies and allocate resources. Ultimately, the general public, who are indirect stakeholders, in New York City would benefit from safer communities and better emergency services.
 
 We are focused on predicting the response time of law enforcement and emergency medical units  
 
@@ -35,15 +33,51 @@ We are focused on predicting the response time of law enforcement and emergency 
 
 Dataset is taken from : https://data.cityofnewyork.us/Public-Safety/NYPD-Calls-for-Service-Year-to-Date-/n2zq-pubd/about_data
 
-After this you will include interesting results from your exploratory data analysis.  I'd like to see information about distributions (possibly just a bit of text here if nothing interesting showed up), as well as attempts to visualize data to highlight specific patterns (possibly using dimensionality reductions techniques and / or clustering).  
+The following image shows the number of incidents reported based on the location.
+![my image](location.png)
+
+The following image shows the number of incidents reported based on the location.
 
 ## Preprocessing
 
-If your data required some preprocessing (surely it did!) document your techniques here.  If this resulted in interesting transformations, you can include examples in code and visualizations to help me understand how the data was transformed.  If you did any sophisticated imputations (e.g. a custom imputation method) feel free to include a code snippet to show me how this was done.
+The steps included in preprocessing of data are as follows:
+
+The time difference in minutes between 'ARRIVD_TS' and 'DISP_TS' columns was calculated and stored in the 'Time_Difference_Minutes' column in the 'nypd_data' DataFrame. Rows where the time difference was less than 0 were filtered out to ensure valid time durations for analysis. And the outliers where filtered out based on the confidence interval.
+
+code: 
+Q1 = nypd_data['Time_Difference_Minutes'].quantile(0.25)
+Q3 = nypd_data['Time_Difference_Minutes'].quantile(0.75)
+
+# Calculate the interquartile range (IQR)
+IQR = Q3 - Q1
+
+# Define the lower and upper bounds to identify outliers
+lower_bound = Q1 - 1.5 * IQR
+upper_bound = Q3 + 1.5 * IQR
+
+# Filter the DataFrame to remove outliers
+nypd_data_no_outliers = nypd_data[(nypd_data['Time_Difference_Minutes'] >= lower_bound) & (nypd_data['Time_Difference_Minutes'] <= upper_bound)]
+
+The columns 'CAD_EVNT_ID', 'GEO_CD_X', and 'GEO_CD_Y' were dropped from the 'merged_data' DataFrame as they were deemed unnecessary for the analysis.
+
+The 'BORO_NM' column in the 'merged_data' DataFrame was encoded using LabelEncoder, which converts categorical labels into numerical representations. The mapping of original values to encoded values in the 'BORO_NM' column was printed to understand how the encoding was performed.
+
+from sklearn.preprocessing import LabelEncoder
+# Initialize LabelEncoder
+label_encoder = LabelEncoder()
+
+# Fit and transform the 'BORO_NM' column
+merged_data['BORO_NM_encoded'] = label_encoder.fit_transform(merged_data['BORO_NM'])
+
+# Print the mapping of original values to encoded values
+print("Mapping of original values to encoded values:")
+for original, encoded in zip(label_encoder.classes_, label_encoder.transform(label_encoder.classes_)):
+    print(f"{original}: {encoded}")
 
 ## Modeling
 
-You should have done some initial modeling at this point - for instance, running a simple random forest classifier or MLP to get some baseline information about the performance of your model.  Include any relevant statistic (e.g. F1-scores, confusion matrices, etc.).
+The MAE of 1.35 minutes indicates that, on average, the model's predictions differ from the actual values by about 1.35 minutes.
+This initial modeling provides a baseline performance metric that can be used to assess the model's improvement in future iterations.
 
 ## Problems & Challenges
 
@@ -51,14 +85,6 @@ We are yet to find the baseline for our modelling technique and how to go about 
 
 ## Next steps
 
-Procceed with the modelling - 
-Test the model 
+Procceed with the modelling - 04/06/2024 - 04/13/2024
+Test the model - 04/14/2024 - 04/21/2024
 
-# Grading
-
-- Does your proposal include all of the above mentioned sections? [10 points]
-- Are your objectives concrete and do you have a clear stakeholder need? [10 points]
-- Do you have a good data source and have you done a thorough job investigating its provenance and credibility? [5 points]
-- Did you do a thorough job exploring your data [10 points]
-- Have you done some initial modeling of your problem and do you have some early baseline results? [10 points]
-- Do you have a clear path forward [5 points]
